@@ -2,7 +2,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
     <li class="breadcrumb-item"><a routerLink="/categories">Categorias</a></li>
-    <li class="breadcrumb-item active">Formulário de Categorias</li>
+    <li class="breadcrumb-item active">{{ pageTitle }}</li>
   </ol>
 </nav>
 
@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<form [formGroup]="categoryForm">
+<form [formGroup]="categoryForm" (submit)="submit()">
   <div class="card">
     <div class="card-header">
       Informações sobre a categoria
@@ -29,6 +29,10 @@
         <div class="form-group col-md-4">
           <label for="name">Nome</label>
           <input class="form-control" type="text" id="name" formControlName="name">
+          <div class="text-danger" *ngIf="categoryForm.get('name').invalid && categoryForm.get('name').touched">
+            <div *ngIf="categoryForm.get('name').errors.required">Campo Nome Obrigatório</div>
+            <div *ngIf="categoryForm.get('name').errors.minlength">Campo deve ter no mínimo 2 caracteres</div>
+          </div>
         </div>
         <div class="form-group col-md-8">
           <label for="description">Descrição</label>
@@ -38,7 +42,8 @@
     </div>
   </div>
 
-  <button type="submit" class="btn btn-primary btn-lg mt-3 float-right" [disabled]="categoryForm.invalid">
+  <button type="submit" class="btn btn-primary btn-lg mt-3 float-right"
+    [disabled]="categoryForm.invalid || submittingForm">
     Salvar
   </button>
 </form>
