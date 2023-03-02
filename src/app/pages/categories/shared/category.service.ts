@@ -59,14 +59,14 @@ export class CategoryService {
   private jsonDataToCategories(jsonData: any[]): Category[] {
     const categories: Category[] = []
     jsonData.forEach(el => {
-      categories.push(el as Category)
+      categories.push(Object.assign(new Category(), el))
     })
 
     return categories
   }
 
   private jsonDataToCategory(jsonData: any): Category {
-    return jsonData as Category
+    return Object.assign(new Category(), jsonData)
   }
 
   private handleError(error: any): Observable<any> {
