@@ -47,10 +47,10 @@ export class EntryFormComponent implements OnInit {
 
   private setPageTitle() {
     if (this.currentAction == 'new') {
-      this.pageTitle = 'Cadastro de Nova Categoria'
+      this.pageTitle = 'Cadastro de Novo Lançamento'
     } else {
       const entryName = this.entry.name || ''
-      this.pageTitle = `Edição da Categoria: ${entryName}`
+      this.pageTitle = `Edição de Lançamento: ${entryName}`
     }
   }
 
@@ -59,6 +59,11 @@ export class EntryFormComponent implements OnInit {
       id: [null],
       name: [null, [Validators.required, Validators.minLength(2)]],
       description: [null],
+      type: [null, [Validators.required]],
+      amount: [null, [Validators.required]],
+      date: [null, [Validators.required]],
+      paid: [null, [Validators.required]],
+      categoryId: [null, [Validators.required]],
     })
   }
 
@@ -112,8 +117,8 @@ export class EntryFormComponent implements OnInit {
   private actionForSuccess(entry: Entry) {
     toastr.success("Solicitação processada com sucesso!");
 
-    this.router.navigateByUrl("categories", { skipLocationChange: true })
-      .then(() => this.router.navigate(["categories", entry.id, "edit"]))
+    this.router.navigateByUrl("entries", { skipLocationChange: true })
+      .then(() => this.router.navigate(["entries", entry.id, "edit"]))
   }
 
   private actionsForFailure(error: any) {
