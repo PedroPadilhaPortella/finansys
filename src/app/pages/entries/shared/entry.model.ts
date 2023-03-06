@@ -1,6 +1,7 @@
+import { BaseResourceModel } from "src/app/shared/models/base-resource.model";
 import { Category } from "../../categories/shared/category.model";
 
-export class Entry {
+export class Entry extends BaseResourceModel {
 
   static types = {
     expense: 'Despesa',
@@ -17,7 +18,9 @@ export class Entry {
     public paid?: boolean,
     public categoryId?: number,
     public category?: Category,
-  ) { }
+  ) {
+    super();
+  }
 
   get paidText(): string {
     return this.paid ? 'Pago': 'Pendente'
