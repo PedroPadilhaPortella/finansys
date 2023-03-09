@@ -2,9 +2,9 @@ import { Injectable, Injector } from '@angular/core';
 import { CategoryService } from '../../categories/shared/category.service';
 import { Entry } from './entry.model';
 
-import { BaseResourceService } from '../../../shared/services/base-resource.service';
-import { catchError, flatMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { catchError, flatMap } from 'rxjs/operators';
+import { BaseResourceService } from '../../../shared/services/base-resource.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,40 +12,25 @@ import { Observable } from 'rxjs';
 export class EntryService extends BaseResourceService<Entry> {
 
   constructor(protected injector: Injector, private categoryService: CategoryService) {
-    super("api/entries", injector);
+    super("api/entries", injector, Entry.fromJson);
   }
 
   create(entry: Entry): Observable<Entry> {
-    return this.categoryService.getById(entry.categoryId)
-      .pipe(
-        flatMap((category) => {
-          entry.category = category
-          return super.create(entry)
-        })
-      )
+    return this.setCategoryAndSendToServer(entry, super.create.bind(this));
   }
 
   update(entry: Entry): Observable<Entry> {
+    return this.setCategoryAndSendToServer(entry, super.update.bind(this));
+  }
+
+  private setCategoryAndSendToServer(entry: Entry, sendFn: any): Observable<Entry> {
     return this.categoryService.getById(entry.categoryId)
       .pipe(
         flatMap((category) => {
           entry.category = category
-          return super.update(entry)
-        })
+          return sendFn(entry)
+        }),
+        catchError(this.handleError)
       )
-  }
-
-  /* Private Methods */
-  protected jsonDataToResources(jsonData: any[]): Entry[] {
-    const entries: Entry[] = []
-    jsonData.forEach(el => {
-      entries.push(Object.assign(new Entry(), el))
-    })
-
-    return entries
-  }
-
-  protected jsonDataToResource(jsonData: any): Entry {
-    return Object.assign(new Entry(), jsonData)
   }
 }

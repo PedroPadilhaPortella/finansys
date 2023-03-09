@@ -26,4 +26,8 @@ export class Entry extends BaseResourceModel {
     return this.paid ? 'Pago': 'Pendente'
   }
 
+  static fromJson(jsonData: any): Entry {
+    return Object.assign(new Entry(), jsonData)
+  }
+
 }
