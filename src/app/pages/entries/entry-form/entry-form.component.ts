@@ -1,26 +1,18 @@
-import { switchMap } from 'rxjs/operators';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
-import { EntryService } from '../shared/entry.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Entry } from '../shared/entry.model';
-import toastr from 'toastr';
+import { Component, Injector, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { BaseResourceFormComponent } from '../../../shared/components/base-resource-form/base-resource-form.component';
 import { Category } from '../../categories/shared/category.model';
 import { CategoryService } from '../../categories/shared/category.service';
+import { Entry } from '../shared/entry.model';
+import { EntryService } from '../shared/entry.service';
 
 @Component({
   selector: 'app-entry-form',
   templateUrl: './entry-form.component.html',
   styleUrls: ['./entry-form.component.css']
 })
-export class EntryFormComponent implements OnInit {
+export class EntryFormComponent extends BaseResourceFormComponent<Entry> implements OnInit {
 
-  entryForm: FormGroup
-  currentAction: string
-  pageTitle: string
-  submittingForm: boolean = false
-  serverErrorMessages: string[] = null
-  entry: Entry = new Entry()
   categories: Array<Category>
 
   imaskConfig = {
@@ -47,43 +39,24 @@ export class EntryFormComponent implements OnInit {
   }
 
   constructor(
-    private entryService: EntryService,
-    private categoryService: CategoryService,
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-  ) { }
+    protected entryService: EntryService,
+    protected categoryService: CategoryService,
+    protected injector: Injector,
+  ) {
+    super(injector, entryService, new Entry(), Entry.fromJson);
+  }
 
   ngOnInit() {
-    this.setCurrentAction()
-    this.buildEntryForm()
-    this.loadEntry()
+    super.ngOnInit()
     this.loadCategories()
   }
+  
+  protected creationPageTitle = (): string => "Cadastro de Novo Lançamento";
 
-  ngAfterContentChecked(): void {
-    this.setPageTitle();
-  }
+  protected editionPageTitle = (): string => `Editando Lançamento: ${this.resource.name || ''}`;
 
-  private setCurrentAction() {
-    if (this.route.snapshot.url[0].path === 'new') {
-      this.currentAction = 'new'
-    } else {
-      this.currentAction = 'edit'
-    }
-  }
-
-  private setPageTitle() {
-    if (this.currentAction == 'new') {
-      this.pageTitle = 'Cadastro de Novo Lançamento'
-    } else {
-      const entryName = this.entry.name || ''
-      this.pageTitle = `Edição de Lançamento: ${entryName}`
-    }
-  }
-
-  private buildEntryForm() {
-    this.entryForm = this.formBuilder.group({
+  protected buildResourceForm(): void {
+    this.resourceForm = this.formBuilder.group({
       id: [null],
       name: [null, [Validators.required, Validators.minLength(2)]],
       description: [null],
@@ -99,76 +72,11 @@ export class EntryFormComponent implements OnInit {
     return Object.entries(Entry.types).map(([key, value]) => ({ key, value }))
   }
 
-  private loadEntry() {
-    if (this.currentAction == 'edit') {
-      this.route.paramMap
-        .pipe(
-          switchMap((params) => this.entryService.getById(Number(params.get('id')))),
-        )
-        .subscribe(
-          (entry) => {
-            this.entry = entry
-            this.entryForm.patchValue(entry)
-          },
-          () => alert('Ocorreu um erro, tente mais tarde!')
-        )
-    }
-  }
-
   private loadCategories() {
     this.categoryService.getAll()
-    .subscribe(
-      (categories) => this.categories = categories,
-      () => alert('Ocorreu um erro, tente mais tarde!')
-    )
-  }
-
-  submit() {
-    if (this.entryForm.valid) {
-      this.submittingForm = true;
-
-      if (this.currentAction === 'new') {
-        this.createEntry()
-      } else {
-        this.updateEntry()
-      }
-    }
-    this.submittingForm = false;
-  }
-
-  private createEntry() {
-    const entry = Entry.fromJson(this.entryForm.value)
-    this.entryService.create(entry)
       .subscribe(
-        (entry: Entry) => this.actionForSuccess(entry),
-        (error: any) => this.actionsForFailure(error)
+        (categories) => this.categories = categories,
+        () => alert('Ocorreu um erro, tente mais tarde!')
       )
-  }
-
-  private updateEntry() {
-    const entry = Entry.fromJson(this.entryForm.value)
-    this.entryService.update(entry)
-      .subscribe(
-        (entry: Entry) => this.actionForSuccess(entry),
-        (error: any) => this.actionsForFailure(error)
-      )
-  }
-
-  private actionForSuccess(entry: Entry) {
-    toastr.success("Solicitação processada com sucesso!");
-
-    this.router.navigateByUrl("entries", { skipLocationChange: true })
-      .then(() => this.router.navigate(["entries", entry.id, "edit"]))
-  }
-
-  private actionsForFailure(error: any) {
-    toastr.error("Ocorreu um erro ao processar a sua solicitação!");
-
-    this.submittingForm = false;
-
-    if (error.status === 422)
-      this.serverErrorMessages = JSON.parse(error._body).errors;
-    else
-      this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor, tente novamente mais tarde."]
   }
 }
