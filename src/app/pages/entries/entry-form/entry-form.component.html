@@ -25,19 +25,20 @@
           <select name="type" class="form-control" id="type" formControlName="type">
             <option *ngFor="let option of getTypeOptions()" [value]="option.key">{{ option.value }}</option>
           </select>
-          <div class="text-danger" *ngIf="resourceForm.get('type').invalid && resourceForm.get('type').touched">
-            <div *ngIf="resourceForm.get('type').errors.required">Campo Obrigatório</div>
-          </div>
+
+          <app-form-field-error 
+            [form-control]="resourceForm.get('type')" field-name="Tipo">
+          </app-form-field-error>
         </div>
 
         <!-- Name Field -->
         <div class="form-group col-md-5">
           <label for="name">Lançamento</label>
           <input class="form-control" type="text" id="name" formControlName="name" />
-          <div class="text-danger" *ngIf="resourceForm.get('name').invalid && resourceForm.get('name').touched">
-            <div *ngIf="resourceForm.get('name').errors.required">Campo Nome Obrigatório</div>
-            <div *ngIf="resourceForm.get('name').errors.minlength">Campo deve ter no mínimo 2 caracteres</div>
-          </div>
+
+          <app-form-field-error 
+            [form-control]="resourceForm.get('name')" field-name="Lançamento">
+          </app-form-field-error>
         </div>
 
         <!-- Amount Field -->
@@ -50,10 +51,10 @@
             <input type="text" class="form-control text-right" [imask]="imaskConfig"
             id="amount" formControlName="amount" />
           </div>
-          <div class="text-danger pl-5" 
-          *ngIf="resourceForm.get('amount').invalid && resourceForm.get('amount').touched">
-            <div *ngIf="resourceForm.get('amount').errors.required">Campo Valor Obrigatório</div>
-          </div>
+
+          <app-form-field-error 
+            [form-control]="resourceForm.get('amount')" field-name="Valor">
+          </app-form-field-error>
         </div>
         
         <!-- Date Field -->
@@ -61,9 +62,10 @@
           <label for="date">Data</label>
           <p-calendar inputStyleClass="form-control" dataType="string" dateFormat="dd/mm/yy" 
           [locale]="languagePtBr" [showButtonBar]="true" id="date" formControlName="date"></p-calendar>
-          <div class="text-danger" *ngIf="resourceForm.get('date').invalid && resourceForm.get('date').touched">
-            <div *ngIf="resourceForm.get('date').errors.required">Data Obrigatória</div>
-          </div>
+          
+          <app-form-field-error 
+            [form-control]="resourceForm.get('date')" field-name="Data">
+          </app-form-field-error>
         </div>
       </div>
 
@@ -71,8 +73,8 @@
 
         <!-- Paid Field -->
         <div class="form-group col-md-2">
-          <label for="paid">Pago</label>
-          <div class="btn-group">
+          <label for="paid">Status</label>
+          <div class="btn-group pr-5">
             <label (click)="resourceForm.get('paid').setValue(true)" class="btn btn-outline-info" 
             [class.active]="resourceForm.get('paid').value == true">
               Pago
@@ -82,9 +84,9 @@
               Pendente
             </label>
           </div>
-          <div class="text-danger pl-5" *ngIf="resourceForm.get('paid').invalid && resourceForm.get('paid').touched">
-            <div *ngIf="resourceForm.get('paid').errors.required">Campo Pago Obrigatório</div>
-          </div>
+          <app-form-field-error 
+            [form-control]="resourceForm.get('paid')" field-name="Status">
+          </app-form-field-error>
         </div>
 
         <!-- Category Field -->
@@ -93,10 +95,9 @@
           <select class="form-control" name="categoryId" id="categoryId" formControlName="categoryId">
             <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
           </select>
-          <div class="text-danger" 
-          *ngIf="resourceForm.get('categoryId').invalid && resourceForm.get('categoryId').touched">
-            <div *ngIf="resourceForm.get('categoryId').errors.required">Categoria Obrigatório</div>
-          </div>
+          <app-form-field-error 
+            [form-control]="resourceForm.get('categoryId')" field-name="Categoria">
+          </app-form-field-error>
         </div>
 
         <!-- Description Field -->
