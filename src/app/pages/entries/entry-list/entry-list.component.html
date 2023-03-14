@@ -2,16 +2,14 @@
 <app-bread-crumb [items]="[{ text: 'Lançamentos'}]">
 </app-bread-crumb>
 
-<div class="row mb-4">
-  <div class="col-md">
-    <h1 class="h2 border-left pl-2">Lançamentos</h1>
-  </div>
-  <div class="col-md">
-    <a class="btn btn-success float-right" routerLink="new">
-      <i class="pi pi-plus" style="font-size: 1.1rem"></i> Adicionar Lançamento
-    </a>
-  </div>
-</div>
+<!-- Page Title -->
+<app-page-header 
+  page-title="Lançamentos" 
+  button-class="btn-success" 
+  button-text="Adicionar Lançamento" 
+  button-link="new" 
+  button-icon="pi-plus">
+</app-page-header>
 
 <table class="table table-hover">
   <thead>

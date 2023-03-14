@@ -3,18 +3,13 @@
 </app-bread-crumb>
 
 <!-- Page Title -->
-<div class="row mb-4">
-  <div class="col-md">
-    <h1 class="h2 border-left pl-2">
-      {{ pageTitle }}
-    </h1>
-  </div>
-  <div class="col-md">
-    <a class="btn btn-light float-right" routerLink="/categories">
-      <i class="pi pi-arrow-left" style="font-size: 1.1rem"></i> Voltar
-    </a>
-  </div>
-</div>
+<app-page-header 
+  [page-title]="pageTitle" 
+  button-class="btn-light" 
+  button-text="Voltar" 
+  button-link="/categories" 
+  button-icon="pi-arrow-left">
+</app-page-header>
 
 <!-- Category Form -->
 <form [formGroup]="resourceForm" (submit)="submit()">
