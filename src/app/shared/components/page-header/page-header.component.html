@@ -1,11 +1,11 @@
 <!-- Page Title -->
 <div class="row mb-4">
-  <div class="col-md-10">
+  <div [ngClass]="{ 'col-md-10': showButton, 'col-md-12': !showButton }">
     <h1 class="h2 border-left pl-2">
       {{ pageTitle }}
     </h1>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-2" *ngIf="showButton">
     <a  class="btn float-right" [ngClass]="buttonClass" [routerLink]="buttonLink">
       <i class="pi" [ngClass]="buttonIcon" style="font-size: 1.1rem"></i> {{ buttonText }}
     </a>
