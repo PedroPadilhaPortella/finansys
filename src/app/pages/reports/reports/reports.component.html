@@ -42,13 +42,15 @@
           <option value="2022">2022</option>
           <option value="2021">2021</option>
           <option value="2020">2020</option>
+          <option value="2019">2019</option>
+          <option value="2018">2018</option>
         </select>
       </div>
     </div>
 
     <div class="form-row">
       <div class="col-md">
-        <button type="button" class="btn btn-primary float-right" (click)="generateReports">
+        <button type="button" class="btn btn-primary float-right" (click)="generateReports()">
           Gerar Relatórios
         </button>
       </div>
@@ -62,7 +64,7 @@
       TOTAL DE RECEITAS
     </div>
     <div class="card-body">
-      <h3 class="card-title">1523,12</h3>
+      <h3 class="card-title">{{revenueTotal}}</h3>
     </div>
   </div>
   <div class="card text-center text-white bg-danger">
@@ -70,7 +72,7 @@
       TOTAL DE DESPESAS
     </div>
     <div class="card-body">
-      <h3 class="card-title">452,12</h3>
+      <h3 class="card-title">{{expenseTotal}}</h3>
     </div>
   </div>
   <div class="card text-center text-white bg-info">
@@ -78,16 +80,16 @@
       SALDO
     </div>
     <div class="card-body">
-      <h3 class="card-title">1102,07</h3>
+      <h3 class="card-title">{{balance}}</h3>
     </div>
   </div>
 </div>
 
 <div class="row mt-5 mb-4">
   <div class="col-md-6">
-    GRÁFICO DE RECEITAS
+    <p-chart type="bar" [data]="revenueChartData" [options]="chartOptions"></p-chart>
   </div>
   <div class="col-md-6">
-    GRÁFICO DE DESPESAS
+    <p-chart type="bar" [data]="expenseChartData" [options]="chartOptions"></p-chart>
   </div>
 </div>
