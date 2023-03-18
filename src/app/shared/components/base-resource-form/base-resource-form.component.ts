@@ -1,5 +1,5 @@
 import { AfterContentChecked, Injector, OnInit, Directive } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import toastr from 'toastr';
@@ -10,13 +10,13 @@ import { BaseResourceService } from '../../services/base-resource.service';
 export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
   implements OnInit, AfterContentChecked {
 
-  resourceForm: FormGroup;
+  resourceForm: UntypedFormGroup;
   currentAction: string;
   pageTitle: string;
   submittingForm: boolean = false;
   serverErrorMessages: string[] = null;
 
-  protected formBuilder: FormBuilder;
+  protected formBuilder: UntypedFormBuilder;
   protected route: ActivatedRoute;
   protected router: Router;
 
@@ -28,7 +28,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
   ) {
     this.route = this.injector.get(ActivatedRoute)
     this.router = this.injector.get(Router)
-    this.formBuilder = this.injector.get(FormBuilder)
+    this.formBuilder = this.injector.get(UntypedFormBuilder)
   }
 
   ngOnInit() {
@@ -114,7 +114,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
     toastr.success("Solicitação processada com sucesso!");
     const baseComponentPath: string = this.route.snapshot.parent.url[0].path;
 
-    this.router.navigateByUrl(baseComponentPath, { skipLocationChange: true })
+    this.router.navigateByUrl(baseComponentPath)
   }
 
   protected actionsForFailure(error: any) {
